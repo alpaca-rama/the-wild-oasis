@@ -1,8 +1,8 @@
 import styled from "styled-components";
 import Tag from "../../ui/Tag.jsx";
-import {Flag} from "../../ui/Flag.jsx";
+import { Flag } from "../../ui/Flag.jsx";
 import Button from "../../ui/Button.jsx";
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 import CheckoutButton from "./CheckoutButton.jsx";
 
 const StyledTodayItem = styled.li`
@@ -25,29 +25,29 @@ const Guest = styled.div`
 `;
 
 
-export default function TodayItem({activity}) {
-    const { id, status, guests, num_nights } = activity
+export default function TodayItem({ activity }) {
+  const { id, status, two_guests, num_nights } = activity
 
-    return (
-        <StyledTodayItem>
-            {status === 'unconfirmed' && <Tag type={'green'}>Arriving</Tag>}
-            {status === 'checked-in' && <Tag type={'blue'}>Departing</Tag>}
+  return (
+    <StyledTodayItem>
+      {status === 'unconfirmed' && <Tag type={'green'}>Arriving</Tag>}
+      {status === 'checked-in' && <Tag type={'blue'}>Departing</Tag>}
 
-            <Flag src={guests.country_flag} alt={`Flag of ${guests.nationality}`} />
-            <Guest>{guests.full_name}</Guest>
-            <div>{num_nights}</div>
+      <Flag src={two_guests.country_flag} alt={`Flag of ${two_guests.nationality}`} />
+      <Guest>{two_guests.full_name}</Guest>
+      <div>{num_nights}</div>
 
-            {status === 'unconfirmed' && (
-                <Button
-                    $variation={'primary'}
-                    $size={'small'}
-                    as={Link}
-                    to={`/checkin/${id}`}
-                >
-                    Check in
-                </Button>
-            )}
-            {status === 'checked-in' && <CheckoutButton bookingId={id} />}
-        </StyledTodayItem>
-    )
+      {status === 'unconfirmed' && (
+        <Button
+          $variation={'primary'}
+          $size={'small'}
+          as={Link}
+          to={`/checkin/${id}`}
+        >
+          Check in
+        </Button>
+      )}
+      {status === 'checked-in' && <CheckoutButton bookingId={id} />}
+    </StyledTodayItem>
+  )
 }

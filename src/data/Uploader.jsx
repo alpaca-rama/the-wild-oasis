@@ -16,51 +16,79 @@ import { guests } from "./data-guests";
 // };
 
 async function deleteGuests() {
-  const { error } = await supabase.from("guests").delete().gt("id", 0);
+  const { error } = await supabase.from("two_guests").delete().gt("id", 0);
   if (error) console.log(`1️⃣${error.message}`);
 }
 
 async function deleteCabins() {
-  const { error } = await supabase.from("cabins").delete().gt("id", 0);
+  const { error } = await supabase.from("two_cabins").delete().gt("id", 0);
   if (error) console.log(`2️⃣${error.message}`);
 }
 
 async function deleteBookings() {
-  const { error } = await supabase.from("bookings").delete().gt("id", 0);
+  const { error } = await supabase.from("two_bookings").delete().gt("id", 0);
   if (error) console.log(`3️⃣${error.message}`);
 }
 
 async function createGuests() {
-  const { error } = await supabase.from("guests").insert(guests);
-  if (error) console.log(`4️⃣${error.message}`);
+  console.log('Creating guests...');
+  console.log('Guest data:', guests);
+  const { data, error } = await supabase.from("two_guests").insert(guests);
+  if (error) {
+    console.error('Error creating guests:', error.message);
+    throw new Error(error.message);
+  }
+  console.log('Guests created successfully:', data);
 }
 
 async function createCabins() {
-  const { error } = await supabase.from("cabins").insert(cabins);
-  if (error) console.log(`5️⃣${error.message}`);
+  console.log('Creating cabins...');
+  console.log('Cabin data:', cabins);
+  const { data, error } = await supabase.from("two_cabins").insert(cabins);
+  if (error) {
+    console.error('Error creating cabins:', error.message);
+    throw new Error(error.message);
+  }
+  console.log('Cabins created successfully:', data);
 }
 
 async function createBookings() {
-  // Bookings need a guestId and a cabinId. We can't tell Supabase IDs for each object, it will calculate them on its own. So it might be different for different people, especially after multiple uploads. Therefore, we need to first get all guestIds and cabinIds, and then replace the original IDs in the booking data with the actual ones from the DB
-  const { data: guestsIds } = await supabase
-    .from("guests")
+  console.log('Starting createBookings...');
+  // Get guests
+  const { data: guestsIds, error: guestsError } = await supabase
+    .from("two_guests")
     .select("id")
     .order("id");
-  const allGuestIds = guestsIds.map((cabin) => cabin.id);
-  const { data: cabinsIds } = await supabase
-    .from("cabins")
+
+  if (guestsError) {
+    console.error('Error fetching guests:', guestsError.message);
+    throw new Error(guestsError.message);
+  }
+  console.log('Fetched guests:', guestsIds);
+
+  const allGuestIds = guestsIds.map((guest) => guest.id);
+
+  // Get cabins
+  const { data: cabinsIds, error: cabinsError } = await supabase
+    .from("two_cabins")
     .select("id")
     .order("id");
+
+  if (cabinsError) {
+    console.error('Error fetching cabins:', cabinsError.message);
+    throw new Error(cabinsError.message);
+  }
+  console.log('Fetched cabins:', cabinsIds);
+
   const allCabinIds = cabinsIds.map((cabin) => cabin.id);
 
   const finalBookings = bookings.map((booking) => {
-    // Here relying on the order of cabins, as they don't have and ID yet
     const cabin = cabins.at(booking.cabin_id - 1);
     const num_nights = subtractDates(booking.end_date, booking.start_date);
     const cabin_price = num_nights * (cabin.regular_price - cabin.discount);
     const extras_price = booking.has_breakfast
       ? num_nights * 15 * booking.num_guests
-      : 0; // hardcoded breakfast price
+      : 0;
     const total_price = cabin_price + extras_price;
 
     let status;
@@ -94,10 +122,15 @@ async function createBookings() {
     };
   });
 
-  console.log(finalBookings);
+  console.log('Prepared bookings:', finalBookings);
 
-  const { error } = await supabase.from("bookings").insert(finalBookings);
-  if (error) console.log(`6️⃣${error.message}`);
+  const { data, error } = await supabase.from("two_bookings").insert(finalBookings);
+  if (error) {
+    console.error('Error creating bookings:', error.message);
+    throw new Error(error.message);
+  }
+  console.log('Bookings created successfully:', data);
+  return data;
 }
 
 function Uploader() {
@@ -105,17 +138,22 @@ function Uploader() {
 
   async function uploadAll() {
     setIsLoading(true);
-    // Bookings need to be deleted FIRST
-    await deleteBookings();
-    await deleteGuests();
-    await deleteCabins();
+    try {
+      // Bookings need to be deleted FIRST
+      await deleteBookings();
+      await deleteGuests();
+      await deleteCabins();
 
-    // Bookings need to be created LAST
-    await createGuests();
-    await createCabins();
-    await createBookings();
-
-    setIsLoading(false);
+      // Bookings need to be created LAST
+      await createGuests();
+      await createCabins();
+      await createBookings();
+    } catch (error) {
+      console.error("Error during upload:", error);
+      alert("Error uploading data: " + error.message);
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   async function uploadBookings() {
