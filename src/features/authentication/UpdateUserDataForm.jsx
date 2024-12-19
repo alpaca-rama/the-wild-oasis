@@ -7,8 +7,7 @@ import FormRow from "../../ui/FormRow";
 import Input from "../../ui/Input";
 
 import { useUser } from "./useUser";
-import {useUpdateUser} from "./useUpdateUser.js";
-import SpinnerMini from "../../ui/SpinnerMini.jsx";
+import { useUpdateUser } from "./useUpdateUser.js";
 
 function UpdateUserDataForm() {
     // We don't need the loading state, and can immediately use the user data, because we know that it has already been loaded at this point
@@ -19,7 +18,7 @@ function UpdateUserDataForm() {
         },
     } = useUser();
 
-    const {updateUser, isUpdating} = useUpdateUser()
+    const { updateUser, isUpdating } = useUpdateUser()
 
     const [fullName, setFullName] = useState(currentFullName);
     const [avatar, setAvatar] = useState(null);

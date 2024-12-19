@@ -9,15 +9,13 @@ import Button from "../../ui/Button";
 import ButtonText from "../../ui/ButtonText";
 
 import { useMoveBack } from "../../hooks/useMoveBack";
-import {useBooking} from "./useBooking.js";
+import { useBooking } from "./useBooking.js";
 import Spinner from "../../ui/Spinner.jsx";
-import Menus from "../../ui/Menus.jsx";
-import {HiArrowDownOnSquare, HiArrowUpOnSquare} from "react-icons/hi2";
-import {useNavigate} from "react-router-dom";
-import {useCheckout} from "../check-in-out/useCheckout.js";
+import { useNavigate } from "react-router-dom";
+import { useCheckout } from "../check-in-out/useCheckout.js";
 import ConfirmDelete from "../../ui/ConfirmDelete.jsx";
 import Modal from "../../ui/Modal.jsx";
-import {useDeleteBooking} from "./useDeleteBooking.js";
+import { useDeleteBooking } from "./useDeleteBooking.js";
 import Empty from "../../ui/Empty.jsx";
 
 const HeadingGroup = styled.div`
@@ -27,7 +25,7 @@ const HeadingGroup = styled.div`
 `;
 
 function BookingDetail() {
-    const { booking, isLoading} = useBooking()
+    const { booking, isLoading } = useBooking()
     const { checkout, isCheckingOut } = useCheckout()
     const { deleteBooking, isDeleting } = useDeleteBooking()
     const moveBack = useMoveBack();
@@ -36,7 +34,7 @@ function BookingDetail() {
     if (isLoading) return <Spinner />
     if (!booking) return <Empty resourceName={'booking'} />
 
-    const {status, id: bookingId} = booking
+    const { status, id: bookingId } = booking
 
     const statusToTagName = {
         unconfirmed: "blue",

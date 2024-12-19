@@ -1,7 +1,6 @@
 import styled from "styled-components";
 import Logo from "./Logo.jsx";
 import MainNav from "./MainNav.jsx";
-import {useCabins} from "../features/cabins/useCabins.js";
 import Uploader from "../data/Uploader.jsx";
 
 const StyledSidebar = styled.aside`

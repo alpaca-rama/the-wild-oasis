@@ -1,4 +1,4 @@
-import {useForm} from "react-hook-form";
+import { useForm } from "react-hook-form";
 
 import Input from "../../ui/Input";
 import Form from "../../ui/Form";
@@ -7,8 +7,8 @@ import FileInput from "../../ui/FileInput";
 import Textarea from "../../ui/Textarea";
 import FormRow from "../../ui/FormRow.jsx";
 
-import {useCreateCabin} from "./useCreateCabin.js";
-import {useEditCabin} from "./useEditCabin.js";
+import { useCreateCabin } from "./useCreateCabin.js";
+import { useEditCabin } from "./useEditCabin.js";
 
 function CreateCabinForm({ cabinToEdit = {}, onCloseModal }) {
     const { id: editId, ...editValues } = cabinToEdit
@@ -34,14 +34,14 @@ function CreateCabinForm({ cabinToEdit = {}, onCloseModal }) {
         const image = typeof data.image === 'string' ? data.image : data.image[0]
 
         if (isEditSession) editCabin({ newCabinData: { ...data, image }, id: editId }, {
-            onSuccess: (data) => {
+            onSuccess: () => {
                 // console.log(data)
                 reset()
                 onCloseModal?.()
             }
         })
-        else createCabin({...data, image: image}, {
-            onSuccess: (data) => {
+        else createCabin({ ...data, image: image }, {
+            onSuccess: () => {
                 // console.log(data)
                 reset()
                 onCloseModal?.()
@@ -49,7 +49,7 @@ function CreateCabinForm({ cabinToEdit = {}, onCloseModal }) {
         })
     }
 
-    function onError(errors) {
+    function onError() {
         // console.log(errors)
     }
 
@@ -61,7 +61,7 @@ function CreateCabinForm({ cabinToEdit = {}, onCloseModal }) {
                     id="name"
                     disabled={isWorking}
                     {...register('name', {
-                           required: 'This field is required.',
+                        required: 'This field is required.',
                     })}
                 />
             </FormRow>

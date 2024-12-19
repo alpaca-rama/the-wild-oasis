@@ -1,12 +1,13 @@
-import {createContext, useContext, useEffect} from "react";
-import {useLocalStorageState} from "../hooks/useLocalStorageState.js";
+import { createContext, useContext, useEffect } from "react";
+import { useLocalStorageState } from "../hooks/useLocalStorageState.js";
 
 const DarkModeContext = createContext()
 
-function DarkModeProvider({children}) {
+// eslint-disable-next-line
+function DarkModeProvider({ children }) {
     const [isDarkMode, setIsDarkMode] = useLocalStorageState(window.matchMedia('(prefers-color-scheme: dark)').matches, 'isDarkMode')
 
-    useEffect(function() {
+    useEffect(function () {
         if (isDarkMode) {
             document.documentElement.classList.add('dark-mode')
             document.documentElement.classList.remove('light-mode')
@@ -20,7 +21,7 @@ function DarkModeProvider({children}) {
         setIsDarkMode((isDark) => !isDark)
     }
 
-    return(
+    return (
         <DarkModeContext.Provider value={{ isDarkMode, toggleDarkMode }}>
             {children}
         </DarkModeContext.Provider>
