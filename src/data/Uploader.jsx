@@ -138,7 +138,8 @@ function Uploader() {
         gap: "8px",
       }}
     >
-      <h3>SAMPLE DATA</h3>
+      <h3 style={{ color: 'black' }}>SAMPLE DATA</h3>
+      <p style={{ color: 'grey', fontSize: '12px' }}>If no sample data is showing</p>
 
       <Button onClick={uploadAll} disabled={isLoading}>
         Upload ALL
