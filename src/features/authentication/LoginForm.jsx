@@ -3,7 +3,7 @@ import Button from "../../ui/Button";
 import Form from "../../ui/Form";
 import Input from "../../ui/Input";
 import FormRowVertical from "../../ui/FormRowVertical";
-import {useLogin} from "./useLogin.js";
+import { useLogin } from "./useLogin.js";
 import SpinnerMini from "../../ui/SpinnerMini.jsx";
 
 function LoginForm() {
@@ -26,6 +26,11 @@ function LoginForm() {
 
     return (
         <Form onSubmit={handleSubmit}>
+
+            <h4>Test User</h4>
+            <p>Username: john.doe@two.co.za</p>
+            <p>Password: J0hnDo3!</p>
+
             <FormRowVertical label="Email address">
                 <Input
                     type="email"
@@ -38,6 +43,7 @@ function LoginForm() {
                 />
             </FormRowVertical>
 
+            J0hnDo3!
             <FormRowVertical label="Password">
                 <Input
                     type="password"
