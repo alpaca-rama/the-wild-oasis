@@ -43,7 +43,6 @@ function LoginForm() {
                 />
             </FormRowVertical>
 
-            J0hnDo3!
             <FormRowVertical label="Password">
                 <Input
                     type="password"
