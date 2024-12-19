@@ -1,7 +1,7 @@
-import supabase, {supabaseUrl} from "./supabase.js";
+import supabase, { supabaseUrl } from "./supabase.js";
 
-export async function signup({fullName, email, password}) {
-    const {data, error} = await supabase.auth.signUp({
+export async function signup({ fullName, email, password }) {
+    const { data, error } = await supabase.auth.signUp({
         email, password, options: {
             data: {
                 fullName,
@@ -15,7 +15,7 @@ export async function signup({fullName, email, password}) {
     return data
 }
 
-export async function login({email, password}) {
+export async function login({ email, password }) {
     const { data, error } = await supabase.auth
         .signInWithPassword({
             email,
@@ -28,7 +28,7 @@ export async function login({email, password}) {
 }
 
 export async function getCurrentUser() {
-    const {data: session} = await supabase.auth.getSession()
+    const { data: session } = await supabase.auth.getSession()
 
     if (!session.session) return null
 
@@ -43,12 +43,12 @@ export async function getCurrentUser() {
 
 
 export async function logout() {
-    const {error} = await supabase.auth.signOut()
+    const { error } = await supabase.auth.signOut()
 
     if (error) throw new Error(error.message)
 }
 
-export async function updateCurrenUser({fullName, password, avatar}){
+export async function updateCurrenUser({ fullName, password, avatar }) {
     // 1. Update password OR fullName
     let updateData
     if (password) updateData = { password }
@@ -62,16 +62,16 @@ export async function updateCurrenUser({fullName, password, avatar}){
     // 2. Upload the avatar image
     const fileName = `avatar-${data.user.id}-${Math.random()}`
 
-    const {error: storageError} = await supabase.storage
-        .from('avatars')
+    const { error: storageError } = await supabase.storage
+        .from('two_avatars')
         .upload(fileName, avatar)
 
     if (storageError) throw new Error(`👈🏼 ${storageError.message}`)
 
     // 3. Update avatar in the user
-    const {data: updatedUser, error: error2} = await supabase.auth.updateUser({
+    const { data: updatedUser, error: error2 } = await supabase.auth.updateUser({
         data: {
-            avatar: `${supabaseUrl}/storage/v1/object/public/avatars/${fileName}`
+            avatar: `${supabaseUrl}/storage/v1/object/public/two_avatars/${fileName}`
         }
     })
 

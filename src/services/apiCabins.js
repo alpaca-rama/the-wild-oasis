@@ -1,13 +1,12 @@
-import supabase, {supabaseUrl} from "./supabase.js";
+import supabase, { supabaseUrl } from "./supabase.js";
 
 export async function getCabins() {
     const { data, error } = await supabase
-        .from('cabins')
+        .from('two_cabins')
         .select('*')
         .order('id')
 
-    if (error)
-    {
+    if (error) {
         console.error(`💥${error}`)
         throw new Error('Cabins could not be loaded')
     }
@@ -22,10 +21,10 @@ export async function createEditCabin(newCabin, id) {
         .replaceAll("/", "");
     const imagePath = hasImagePath ?
         newCabin.image :
-        `${supabaseUrl}/storage/v1/object/public/cabin_images/${imageName}`
+        `${supabaseUrl}/storage/v1/object/public/two_cabin_images/${imageName}`
 
     // 1. Create/Edit cabin
-    let query = supabase.from('cabins')
+    let query = supabase.from('two_cabins')
 
     // A) Create
     if (!id)
@@ -41,8 +40,7 @@ export async function createEditCabin(newCabin, id) {
 
     const { data, error } = await query.select().single()
 
-    if (error)
-    {
+    if (error) {
         console.error(`👉🏼${error}`)
         throw new Error('Cabin could not be created.')
     }
@@ -51,12 +49,12 @@ export async function createEditCabin(newCabin, id) {
     if (hasImagePath) return data
 
     const { error: storageError } = await supabase.storage
-        .from('cabin_images')
+        .from('two_cabin_images')
         .upload(imageName, newCabin.image)
 
     // 3. Delete the cabin if there was an error uploading the image.
     if (error) {
-        await supabase.from('cabins')
+        await supabase.from('two_cabins')
             .delete()
             .eq('id', data.id)
         console.error(`⭐️${storageError}`)
@@ -65,13 +63,12 @@ export async function createEditCabin(newCabin, id) {
 }
 
 export async function deleteCabin(id) {
-    const {data, error } = await supabase
-        .from('cabins')
+    const { data, error } = await supabase
+        .from('two_cabins')
         .delete()
         .eq('id', id)
 
-    if (error)
-    {
+    if (error) {
         console.error(error)
         throw new Error('Cabin could not be deleted.')
     }

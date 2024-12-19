@@ -7,12 +7,12 @@ import Table from "../../ui/Table";
 import { formatCurrency } from "../../utils/helpers";
 import { formatDistanceFromNow } from "../../utils/helpers";
 import Menus from "../../ui/Menus.jsx";
-import {HiArrowDownOnSquare, HiArrowUpOnSquare, HiEye, HiTrash} from "react-icons/hi2";
-import {useNavigate} from "react-router-dom";
-import {useCheckout} from "../check-in-out/useCheckout.js";
+import { HiArrowDownOnSquare, HiArrowUpOnSquare, HiEye, HiTrash } from "react-icons/hi2";
+import { useNavigate } from "react-router-dom";
+import { useCheckout } from "../check-in-out/useCheckout.js";
 import Modal from "../../ui/Modal.jsx";
 import ConfirmDelete from "../../ui/ConfirmDelete.jsx";
-import {useDeleteBooking} from "./useDeleteBooking.js";
+import { useDeleteBooking } from "./useDeleteBooking.js";
 
 const Cabin = styled.div`
   font-size: 1.6rem;
@@ -41,7 +41,7 @@ const Amount = styled.div`
   font-weight: 500;
 `;
 
-function BookingRow({booking: {
+function BookingRow({ booking: {
     id: bookingId,
     created_at,
     start_date,
@@ -50,13 +50,12 @@ function BookingRow({booking: {
     num_guests,
     total_price,
     status,
-    guests: { full_name: guest_name, email },
-    cabins: { name: cabinName },
+    two_guests: { full_name: guest_name, email },
+    two_cabins: { name: cabinName },
 },
-                    })
-{
+}) {
     const navigate = useNavigate()
-    const { checkout, isCheckingOut} = useCheckout()
+    const { checkout, isCheckingOut } = useCheckout()
     const { deleteBooking, isDeleting } = useDeleteBooking()
 
     const statusToTagName = {
@@ -75,16 +74,16 @@ function BookingRow({booking: {
             </Stacked>
 
             <Stacked>
-        <span>
-          {isToday(new Date(start_date))
-              ? "Today"
-              : formatDistanceFromNow(start_date)}{" "}
-            &rarr; {num_nights} night stay
-        </span>
                 <span>
-          {format(new Date(start_date), "MMM dd yyyy")} &mdash;{" "}
+                    {isToday(new Date(start_date))
+                        ? "Today"
+                        : formatDistanceFromNow(start_date)}{" "}
+                    &rarr; {num_nights} night stay
+                </span>
+                <span>
+                    {format(new Date(start_date), "MMM dd yyyy")} &mdash;{" "}
                     {format(new Date(end_date), "MMM dd yyyy")}
-        </span>
+                </span>
             </Stacked>
 
             <Tag type={statusToTagName[status]}>{status.replace("-", " ")}</Tag>
@@ -100,7 +99,7 @@ function BookingRow({booking: {
                         </Menus.Button>
 
                         {status === 'unconfirmed' &&
-                            <Menus.Button icon={<HiArrowDownOnSquare/>} onClick={() => navigate(`/checkin/${bookingId}`)}>
+                            <Menus.Button icon={<HiArrowDownOnSquare />} onClick={() => navigate(`/checkin/${bookingId}`)}>
                                 Check in
                             </Menus.Button>
                         }
